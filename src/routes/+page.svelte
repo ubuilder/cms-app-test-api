@@ -17,7 +17,7 @@
     window.parent.window.postMessage({
       type: "init",
     }, {
-        targetOrigin: 'http://localhost:5173'
+        targetOrigin: 'https://first.cms.hadiahmadi.dev' // from env
     });
 
     window.onmessage = (e) => {
