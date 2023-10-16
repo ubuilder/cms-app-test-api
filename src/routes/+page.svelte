@@ -30,7 +30,7 @@
         if(token) {
 
         api = cms_api({
-          baseUrl: apiUrl + "/api/" + '3000',
+          baseUrl: apiUrl + "/api/" + data.siteId,
           token: token,
         });
     }
