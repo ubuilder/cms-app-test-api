@@ -1,13 +1,15 @@
 <script>
   // your script goes here
-  import Page from "$lib/components/core/Page.svelte";
   import { cms_api } from "$lib/helpers/cms-api";
   import { onMount } from "svelte";
 
-  import { FormSelect, Button, FormTextarea, El, FormField } from "yesvelte";
+  import {Page, FormSelect, Button, FormTextarea, El, FormField, FormInput, FormSwitch } from "@ulibs/yesvelte";
+  import { PUBLIC_API_URL } from "$env/static/public";
+
 
   export let data;
 
+  const apiUrl = PUBLIC_API_URL ?? 'https://cms-api.hadiahmadi.dev'
   let loading = false;
   let api;
   
@@ -17,7 +19,7 @@
     window.parent.window.postMessage({
       type: "init",
     }, {
-        targetOrigin: 'https://first.cms.hadiahmadi.dev' // from env
+        targetOrigin: '*' // from env
     });
 
     window.onmessage = (e) => {
@@ -28,7 +30,7 @@
         if(token) {
 
         api = cms_api({
-          baseUrl: "https://cms-api.hadiahmadi.dev/api/" + '3000',
+          baseUrl: apiUrl + "/api/" + '3000',
           token: token,
         });
     }
@@ -37,22 +39,30 @@
     };
   });
 
+  let useCustomUrl = false;
+  let customUrl = ''
+
   let body = "{}";
 
   let result = "";
   let selectedItem;
   async function run() {
     loading = true;
+
     result = await api[selectedItem](JSON.parse(body));
     loading = false;
   }
 </script>
 
-<Page title="Test API">
+<Page theme={data.theme} dir={data.dir} title="Test API">
+  
   {#if api}
     <El row>
+      <FormSwitch col="auto" bind:checked={useCustomUrl} label="Custom URL"/>
+      {#if !useCustomUrl}
       <FormSelect
-        col="9"
+        col
+        
         bind:value={selectedItem}
         items={Object.keys(api)}
         label="Method"
@@ -60,7 +70,10 @@
       >
         {item}
       </FormSelect>
-      <El col="3" mt="1">
+    {:else}
+      <FormInput col bind:value={customUrl} label="URL" />
+      {/if}
+      <El col="auto" mt="1">
         <Button
           w="100"
           mt="4"

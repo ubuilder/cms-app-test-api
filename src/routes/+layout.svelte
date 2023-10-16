@@ -1,5 +1,7 @@
 <script>
-    import 'yesvelte/css/tabler.min.css'
+
+    export let data;
+    import '@ulibs/yesvelte/styles.css'
 </script>
 
 <slot/>
